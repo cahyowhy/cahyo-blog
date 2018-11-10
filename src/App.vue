@@ -17,5 +17,5 @@
     }
 </script>
 
-<style src="./style/app.css">
+<style lang="scss" src="./style/app.scss">
 </style>

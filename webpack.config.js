@@ -28,6 +28,10 @@ module.exports = {
                 options: {
                     name: '[name].[ext]'
                 }
+            },
+            {
+                test: /\.s[a|c]ss$/,
+                loader: 'style!css!sass'
             }
         ]
     },
