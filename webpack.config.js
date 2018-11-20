@@ -77,7 +77,7 @@ if (process.env.NODE_ENV === 'production') {
                 minifyJS: true
             },
             staticDir: path.join(__dirname, 'dist'),
-            routes: ['/', '/memulai-js-1', '/meminimalisasi-perubahan-var-js', '/macam-method-array-js'],
+            routes: ['/', '/memulai-js-1', '/meminimalisasi-perubahan-var-js', '/macam-method-array-js', '/compile-file-csharp-cmd'],
             postProcess(renderedRoute) {
                 const rgxFBCommentSec = /(<div class="comment-section"(?: \w+="[^"]+")*>(.*?)<\/div>)/g;
                 const replaceValRgxFbCommentSec = `<div class="comment-section"> <div class="fb-comments"
