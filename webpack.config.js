@@ -12,7 +12,7 @@ const changeElement = (html, url) => {
         const component = url === '/' ? 'index-page' : (url.indexOf('/') === 0 ? url.substring(1) : url);
 
         let app = document.getElementById('app');
-        app.innerHTML = '<div><' +component + '/></div>';
+        app.innerHTML = '<div><' + component + '/></div>';
 
         let scriptFbSDK = document.getElementById('facebook-jssdk');
         scriptFbSDK.remove();
@@ -100,24 +100,6 @@ if (process.env.NODE_ENV === 'production') {
             skipThirdPartyRequests: true,
             routes: ['/', '/memulai-js-1', '/meminimalisasi-perubahan-var-js', '/macam-method-array-js', '/compile-file-csharp-cmd'],
             postProcess(renderedRoute) {
-                // const rgxAboutMe = /(<div class="a-item is-sorotan about-me"(?: \w+="[^"]+")*>(.*?)<\/div>)/g;
-                // const replaceAboutMe = '<about-me></about-me>';
-                //
-                // const rgxFBCommentSec = /(<div class="comment-section"(?: \w+="[^"]+")*>(.*?)<\/div>)/g;
-                // const replaceValRgxFbCommentSec = `<div class="comment-section"> <div class="fb-comments"
-                //      data-href="https://developers.facebook.com/docs/plugins/comments#configurator"
-                //      data-width="100%" data-numposts="5"></div></div>`;
-                //
-                // const rgxFBRoot = /(<div id="fb-root"(?: \w+="[^"]+")*>(.*?)<\/div>)/g;
-                // const replaceValFBRoot = '<div id="fb-root"></div>';
-                //
-                // const rgxScriptFBJSDK = /(<script id="facebook-jssdk"(?: \w+="[^"]+")*>(.*?)<\/script>)/g;
-                //
-                // renderedRoute.html = renderedRoute.html.replace(rgxFBCommentSec, replaceValRgxFbCommentSec);
-                // renderedRoute.html = renderedRoute.html.replace(rgxFBRoot, replaceValFBRoot);
-                // renderedRoute.html = renderedRoute.html.replace(rgxScriptFBJSDK, '');
-                //
-                // renderedRoute.html = renderedRoute.html.replace(rgxAboutMe, replaceAboutMe);
                 return changeElement(renderedRoute.html, renderedRoute.originalRoute).then((val) => {
                     renderedRoute.html = val;
 

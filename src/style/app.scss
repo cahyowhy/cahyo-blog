@@ -21,7 +21,7 @@ $grey_calm: #d1d1d1;
 $color_text: #383434;
 
 body {
-  background-color: $wheel_bg_warn;
+  background-color: $wheel_bg_white;
 }
 
 h1, h2, h3, h4, h5, h6, p, span, a {
@@ -76,6 +76,13 @@ a {
   }
 }
 
+h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
+  &::selection {
+    background-color: $wheel_bg_danger;
+    color: $wheel_bg_white;
+  }
+}
+
 .portofolio-wrp {
   text-align: center;
   margin: 2rem 0;
@@ -88,6 +95,9 @@ a {
     align-items: center;
     > a {
       cursor: auto;
+      &:hover {
+        box-shadow: 3px 3px $wheel_bg_danger;
+      }
       &.sl-active {
         cursor: pointer;
         background-color: $wheel_bg_info;
@@ -137,7 +147,7 @@ a {
             box-shadow: 3px 3px $wheel_bg_danger;
           }
           border: none;
-          background-color: $wheel_bg_warn;
+          background-color: $wheel_bg_info;
           display: grid;
           margin-top: 1rem;
         }
@@ -173,7 +183,8 @@ a {
     a {
       color: $color_text;
       &:hover {
-        color: $wheel_bg_danger;
+        background-color: $wheel_bg_info;
+        color: white;
       }
     }
   }
@@ -217,7 +228,7 @@ a {
     position: absolute;
     top: -5px;
     right: 20px;
-    border: solid 15px #B13A22;
+    border: solid 15px $wheel_bg_white;
     border-bottom: solid 15px transparent;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -228,10 +239,6 @@ a {
     .ribbon {
       height: 75px;
     }
-  }
-  .ribbon:active {
-    border-color: $wheel_bg_info;
-    border-bottom-color: transparent;
   }
   height: 300px;
   .inner {
@@ -264,13 +271,12 @@ a {
       &:hover {
         background-color: $wheel_bg_info;
       }
-      color: $wheel_bg_white;
       font-weight: 900;
     }
   }
   &.is-sorotan {
     position: relative;
-    background-color: $wheel_bg_danger;
+    background-color: $wheel_dark;
     h2, span, p {
       color: white;
     }
@@ -283,7 +289,7 @@ a {
     width: 100%;
     height: 70px;
     bottom: 0;
-    background: linear-gradient(0deg, $wheel_bg_warn, transparent);
+    background: linear-gradient(0deg, $wheel_bg_white, transparent);
   }
 }
 
@@ -357,6 +363,13 @@ a {
 
 .about-me {
   height: auto;
+  &.stuck {
+    position: fixed;
+    top: 15px;
+  }
+  &:hover {
+    box-shadow: 7px 7px $wheel_bg_danger;
+  }
   h2 {
     &:hover {
       background-color: transparent;
@@ -369,7 +382,7 @@ a {
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      border: 5px solid $wheel_bg_warn;
+      border: 5px solid $wheel_bg_white;
     }
   }
   p {
@@ -380,7 +393,7 @@ a {
   }
   .socials-wrp {
     padding: 1rem;
-    background-color: $color_folder;
+    background-color: $wheel_bg_white;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     @include fl_col;
@@ -432,5 +445,31 @@ a {
         }
       }
     }
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  #app {
+    padding: 1rem;
+  }
+  .index-page, .article-page {
+    .row .column {
+      width: 100% !important;
+    }
+  }
+  .article-page {
+    .about-me {
+      margin-top: 3rem;
+    }
+  }
+  .a-item {
+    height: auto;
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid $wheel_bg_danger;
+    }
+  }
+  .footer {
+    margin: 0 -2rem -2rem -2rem;
   }
 }

@@ -12,7 +12,7 @@
                 <portofolio-slider/>
             </div>
             <div class="column by3">
-                <about-me/>
+                <about-me ref="aboutMe"/>
             </div>
         </div>
     </div>
@@ -75,6 +75,27 @@
                         isSorotan: false
                     }
                 ]
+            }
+        },
+        mounted() {
+            if (window.$(window).width() > 640) {
+                const element = this.$refs.aboutMe.$el;
+                const context = this;
+
+                new window.Waypoint.Sticky({
+                    element,
+                    handler: function (direction) {
+                        const hasStuck = this.$element.hasClass('stuck');
+                        context.isSidebarFixed = hasStuck;
+
+                        if (hasStuck) {
+                            this.$element.css("width", `${this.$wrapper.width()}px`);
+                        } else {
+                            this.$element.removeAttr('style');
+                        }
+                    },
+                    offset: 60
+                });
             }
         }
     }
