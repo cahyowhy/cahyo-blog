@@ -1,8 +1,21 @@
 <!--suppress ALL -->
 <template>
     <div id="app">
-        <h1>cek</h1>
-        <router-view></router-view>
+        <div class="wrapper">
+            <div class="logo-wrp">
+                <h1>
+                    <router-link to="/">CAHYO WIBOWO</router-link>
+                </h1>
+                <h6>
+                    <span>Daily blog about everything</span>
+                    <span>{{date}}</span>
+                </h6>
+            </div>
+            <router-view/>
+        </div>
+        <div class="footer">
+            <div class="inner-foot"><h5>Made by lust by cahyo © 2018.</h5></div>
+        </div>
     </div>
 </template>
 
@@ -11,7 +24,7 @@
         name: 'app',
         data() {
             return {
-                msg: 'Welcome to your prerender-spa-plugin Vuejs 2.0 demo app!'
+                date: new Date().toDateString()
             }
         }
     }
