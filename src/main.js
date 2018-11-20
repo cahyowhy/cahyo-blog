@@ -10,6 +10,7 @@ import ArticleMacamMethodArrayJS from './pages/articles/ArticleMacamMethodArrayJ
 import IndexPage from './pages/Index.vue';
 
 import CommonImage from './components/CommonImage.vue';
+import PortofolioSlider from './components/PortofolioSlider.vue';
 import BaseArticle from './components/BaseArticle.vue';
 import ArticleItem from './components/ArticleItem.vue';
 import AboutMe from './components/AboutMe.vue';
@@ -19,17 +20,45 @@ Vue.use(VueRouter);
 Vue.use(Meta);
 
 Vue.component('common-image', CommonImage);
+Vue.component('portofolio-slider', PortofolioSlider);
 Vue.component('base-article', BaseArticle);
 Vue.component('article-item', ArticleItem);
 Vue.component('vue-embed-gist', VueEmbedGist);
 Vue.component('about-me', AboutMe);
 
+// page-component
+Vue.component('memulai-js-1', ArticleMemulaiJS1);
+Vue.component('index-page', IndexPage);
+Vue.component('macam-method-array-js', ArticleCompileFileCSHARPDenganCMD);
+Vue.component('compile-file-csharp-cmd', ArticleMacamMethodArrayJS);
+Vue.component('meminimalisasi-perubahan-var-js', ArticleMeminimalisasiPerubahanVarJS);
+
+const MemulaiJS1 = {
+    template: '<div><memulai-js-1/></div>'
+};
+
+const MeminimalisasiPerubahanVarJS = {
+    template: '<div><meminimalisasi-perubahan-var-js/></div>'
+};
+
+const MacamMethodArrayJS = {
+    template: '<div><macam-method-array-js/></div>'
+};
+
+const CompileFileCSHARPDenganCMD = {
+    template: '<div><compile-file-csharp-cmd/></div>'
+};
+
+const BaseIndex = {
+    template: '<div><index-page/></div>'
+};
+
 const routes = [
-    {path: '/', component: IndexPage},
-    {path: '/memulai-js-1', component: ArticleMemulaiJS1},
-    {path: '/meminimalisasi-perubahan-var-js', component: ArticleMeminimalisasiPerubahanVarJS},
-    {path: '/macam-method-array-js', component: ArticleMacamMethodArrayJS},
-    {path: '/compile-file-csharp-cmd', component: ArticleCompileFileCSHARPDenganCMD},
+    {path: '/', component: BaseIndex},
+    {path: '/memulai-js-1', component: MemulaiJS1},
+    {path: '/meminimalisasi-perubahan-var-js', component: MeminimalisasiPerubahanVarJS},
+    {path: '/macam-method-array-js', component: MacamMethodArrayJS},
+    {path: '/compile-file-csharp-cmd', component: CompileFileCSHARPDenganCMD},
 ];
 
 const router = new VueRouter({
@@ -43,7 +72,10 @@ new Vue({
     render: h => h(App),
     mounted() {
         // You'll need this for renderAfterDocumentEvent.
-        window.renderEvent = new Event('render-event', {bubbles: true});
-        document.dispatchEvent(window.renderEvent);
+        window.$(document).on('ready', function () {
+            window.renderEvent = new Event('render-event', {bubbles: true});
+
+            document.dispatchEvent(window.renderEvent);
+        });
     }
 });

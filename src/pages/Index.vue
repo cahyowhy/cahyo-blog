@@ -9,6 +9,7 @@
                                   :title="title" :date="date" :link="link" :subcontent="subcontent"
                                   :isSorotan="isSorotan" class="by2 column"/>
                 </div>
+                <portofolio-slider/>
             </div>
             <div class="column by3">
                 <about-me/>
@@ -20,6 +21,27 @@
 <script>
     export default {
         name: "Index",
+        metaInfo: {
+            title: 'Cahyo Wibowo - Daily blog about everything',
+            meta: [
+                {
+                    'property': 'og:title',
+                    'template': chunk => `${chunk}`,
+                    'content': 'Cahyo Wibowo - Daily blog about everything',
+                    'vmid': 'og:title'
+                },
+                {
+                    'property': 'description',
+                    'template': chunk => `${chunk}`,
+                    'content': 'Daily blog about everything'
+                },
+                {
+                    'property': 'og:image',
+                    'template': chunk => `${chunk}`,
+                    'content': 'https://cahyowhy.github.io/static/images/me.jpg'
+                }
+            ]
+        },
         data() {
             return {
                 articles: [
