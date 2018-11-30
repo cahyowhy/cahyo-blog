@@ -4,7 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PrerenderSPAPlugin = require('prerender-spa-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const {JSDOM} = require("jsdom");
+const isDevelopment = !process.env.NODE_ENV === 'production';
 
 const changeElement = (html, url) => {
     return new Promise((resolve) => {
@@ -25,6 +27,45 @@ const changeElement = (html, url) => {
     });
 };
 
+const cssLoaders = (options) => {
+    options = options || {};
+    const generateLoaders = (loader, loaderOptions = {}) => {
+        const loaders = [{
+            loader: 'css-loader',
+            options: {
+                minimize: !isDevelopment,
+                sourceMap: options.sourceMap
+            }
+        }];
+
+        if (loader) {
+            loaders.push({
+                loader: loader + '-loader',
+                options: Object.assign({}, loaderOptions, {
+                    minimize: !isDevelopment,
+                    sourceMap: options.sourceMap,
+                    extract: options.extract
+                })
+            });
+        }
+
+        if (options.extract) {
+            return ExtractTextPlugin.extract({
+                use: loaders,
+                fallback: 'vue-style-loader'
+            });
+        } else {
+            return ['vue-style-loader'].concat(loaders);
+        }
+    };
+
+    return {
+        css: generateLoaders(),
+        sass: generateLoaders('sass', {indentedSyntax: true}),
+        scss: generateLoaders('sass')
+    }
+};
+
 module.exports = {
     entry: './src/main.js',
     output: {
@@ -36,7 +77,17 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options: {
+                    extractCSS: true,
+                    preserveWhitespace: false,
+                    loaders: [
+                        cssLoaders({
+                            sourceMap: false,
+                            extract: true
+                        })
+                    ]
+                }
             },
             {
                 test: /\.js$/,
@@ -65,11 +116,17 @@ module.exports = {
         historyApiFallback: true,
         noInfo: false,
     },
-    devtool: '#eval-source-map'
+    devtool: 'eval',
+    plugins: [
+        new ExtractTextPlugin({
+            filename: 'static/css/[name].[contenthash].css',
+            allChunks: true
+        }),
+    ]
 };
 
-if (process.env.NODE_ENV === 'production') {
-    module.exports.devtool = '#source-map';
+if (!isDevelopment) {
+    module.exports.devtool = 'none';
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env': {
@@ -107,9 +164,6 @@ if (process.env.NODE_ENV === 'production') {
                 });
             },
             renderer: new Renderer({
-                inject: {
-                    foo: 'bar'
-                },
                 headless: true,
                 renderAfterDocumentEvent: 'render-event'
             })

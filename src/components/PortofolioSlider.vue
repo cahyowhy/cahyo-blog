@@ -7,7 +7,7 @@
             <ul>
                 <li v-for="({img, name, tech, description, link}, index) in portofolios"
                     :key="'li-'+index" v-if="active === (index + 1)">
-                    <img :src="img" :alt="name">
+                    <common-image :src="img" :alt="name"/>
                     <div class="detail">
                         <h4>{{name}}</h4>
                         <p class="text-mute">{{tech}}</p>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather:700,900,300');
+@import url('https://fonts.googleapis.com/css?family=Merriweather:700,300');
 
 @mixin fl_row {
   display: flex;
@@ -19,6 +19,21 @@ $wheel_bg_warn: #FF9F1C;
 
 $grey_calm: #d1d1d1;
 $color_text: #383434;
+
+@keyframes bg_anim {
+  0% {
+    background-color: $wheel_bg_danger;
+  }
+  25% {
+    background-color: $wheel_bg_warn;
+  }
+  50% {
+    background-color: $wheel_bg_info;
+  }
+  100% {
+    background-color: $wheel_bg_white;
+  }
+}
 
 body {
   background-color: $wheel_bg_white;
@@ -86,8 +101,27 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
 .portofolio-wrp {
   text-align: center;
   margin: 2rem 0;
+  .common-image {
+    width: 100%;
+    padding-bottom: 66.6%;
+    height: 0;
+    background: $wheel_bg_danger;
+    animation: bg_anim 2s ease-out infinite;
+  }
   h3 {
     margin-bottom: .5rem;
+  }
+  img {
+    cursor: pointer;
+    transition: .3s;
+    filter: grayscale(100%);
+  }
+  ul li {
+    &:hover {
+      img {
+        filter: none;
+      }
+    }
   }
   .ps-wrp {
     position: relative;
@@ -128,7 +162,7 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
       margin-bottom: 0;
       display: grid;
       .detail {
-        background: rgba(253, 252, 255, .7);
+        background: rgba(253, 252, 255, .9);
         position: absolute;
         bottom: 0;
         padding: 1rem 1.5rem;
@@ -160,6 +194,7 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
 }
 
 .logo-wrp {
+  position: relative;
   @include fl_col;
   align-items: center;
   justify-content: center;
@@ -187,6 +222,11 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
         color: white;
       }
     }
+  }
+  css-doodle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -271,7 +311,7 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
       &:hover {
         background-color: $wheel_bg_info;
       }
-      font-weight: 900;
+      font-weight: 700;
     }
   }
   &.is-sorotan {
@@ -341,6 +381,9 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
       margin-bottom: .5rem;
     }
     h2 + p.text-mute {
+      color: $wheel_bg_danger;
+      font-weight: bold;
+      font-style: italic;
       margin-bottom: 2rem;
     }
     padding: 2rem 1.5rem;
@@ -393,12 +436,11 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
   }
   .socials-wrp {
     padding: 1rem;
-    background-color: $wheel_bg_white;
+    background-color: $wheel_bg_info;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     @include fl_col;
     align-items: center;
-    box-shadow: 0px -5px 5px $grey_calm;
     p {
       color: $wheel_dark;
       font-weight: bold;
@@ -419,20 +461,10 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
       &:not(:last-child) {
         margin-right: 1rem;
       }
-      &:first-child {
-        background-color: #3a5998;
-      }
-      &:nth-child(2) {
-        background-color: #8a4aa1;
-      }
-      &:nth-child(3) {
-        background-color: #211f1f;
-      }
-      &:last-child {
-        background-color: #4fce5d;
-      }
+      background-color: $wheel_bg_warn;
       &:hover {
-        box-shadow: 0px 5px $wheel_bg_info;
+        background-color: $wheel_bg_danger;
+        box-shadow: 0px 5px $wheel_bg_white;
         color: white;
       }
       a {
@@ -452,12 +484,21 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
   #app {
     padding: 1rem;
   }
+  .logo-wrp {
+    text-align: center;
+  }
   .index-page, .article-page {
     .row .column {
       width: 100% !important;
     }
   }
   .article-page {
+    .column {
+      padding: 0;
+    }
+    .content {
+      padding: 1rem 0 !important;
+    }
     .about-me {
       margin-top: 3rem;
     }
@@ -468,8 +509,33 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
       margin-bottom: 1rem;
       border-bottom: 1px solid $wheel_bg_danger;
     }
+    .ov-lg {
+      opacity: 0;
+    }
   }
   .footer {
     margin: 0 -2rem -2rem -2rem;
+  }
+  .portofolio-wrp {
+    .ps-wrp {
+      display: block;
+      > a {
+        position: absolute;
+        top: 50%;
+        margin: 0 !important;
+        transform: translate(0, -50%);
+        z-index: 1;
+        opacity: 0;
+        &.sl-active {
+          opacity: 1.0;
+        }
+        &:first-child {
+          left: 0;
+        }
+        &:last-child {
+          right: 0;
+        }
+      }
+    }
   }
 }
