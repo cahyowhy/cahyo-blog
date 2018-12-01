@@ -372,6 +372,15 @@ h1, h2, h3, h4, h5, h6, span, a, p, img, div, td, tr, th, iframe {
 }
 
 .article-page {
+  .share-wrapper {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $grey_calm;
+    >p {
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+  }
   .nl-blocked {
     display: block;
     margin-bottom: 1rem;

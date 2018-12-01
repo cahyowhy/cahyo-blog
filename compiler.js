@@ -6,7 +6,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const {JSDOM} = require("jsdom");
-const isDevelopment = !process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const changeElement = (html, url) => {
     return new Promise((resolve) => {
@@ -15,13 +16,6 @@ const changeElement = (html, url) => {
 
         let app = document.getElementById('app');
         app.innerHTML = '<div><' + component + '/></div>';
-
-        let scriptFbSDK = document.getElementById('facebook-jssdk');
-        scriptFbSDK.remove();
-
-        let fbRoot = document.getElementById('fb-root');
-        fbRoot.innerHTML = '';
-        fbRoot.classList.remove('fb_reset');
 
         resolve(document.documentElement.outerHTML);
     });
@@ -66,73 +60,68 @@ const cssLoaders = (options) => {
     }
 };
 
-module.exports = {
-    entry: './src/main.js',
-    output: {
-        path: path.resolve(__dirname, './dist'),
-        publicPath: '/',
-        filename: 'build.js'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    extractCSS: true,
-                    preserveWhitespace: false,
-                    loaders: [
-                        cssLoaders({
-                            sourceMap: false,
-                            extract: true
-                        })
-                    ]
+const getEnvironment = () => {
+    return {
+        entry: isDevelopment ? ['./src/main.js', "webpack-hot-middleware/client?noInfo=true&reload=true"] :
+            ['./src/main.js'],
+        output: {
+            path: path.resolve(__dirname, './dist'),
+            publicPath: '/',
+            filename: 'js/[name].[hash].js',
+            chunkFilename: 'js/[name].[chunkhash].js'
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.vue$/,
+                    loader: 'vue-loader',
+                    options: {
+                        extractCSS: true,
+                        preserveWhitespace: false,
+                        loaders: [
+                            cssLoaders({
+                                sourceMap: false,
+                                extract: true
+                            })
+                        ]
+                    }
+                },
+                {
+                    test: /\.js$/,
+                    loader: 'babel-loader',
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.s[a|c]ss$/,
+                    loader: 'style!css!sass'
                 }
-            },
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/
-            },
-            {
-                test: /\.(png|jpg|gif|svg|jpeg)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]'
-                }
-            },
-            {
-                test: /\.s[a|c]ss$/,
-                loader: 'style!css!sass'
+            ]
+        },
+        resolve: {
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js'
             }
+        },
+        devtool: 'eval',
+        plugins: [
+            new ExtractTextPlugin({
+                filename: 'static/css/[name].[contenthash].css',
+                allChunks: true
+            }),
         ]
-    },
-    resolve: {
-        alias: {
-            'vue$': 'vue/dist/vue.esm.js'
-        }
-    },
-    devServer: {
-        historyApiFallback: true,
-        noInfo: false,
-    },
-    devtool: 'eval',
-    plugins: [
-        new ExtractTextPlugin({
-            filename: 'static/css/[name].[contenthash].css',
-            allChunks: true
-        }),
-    ]
+    };
 };
 
+let environment = getEnvironment();
 if (!isDevelopment) {
-    module.exports.devtool = 'none';
-    module.exports.plugins = (module.exports.plugins || []).concat([
+    environment.devtool = 'none';
+    environment.plugins = (environment.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
             }
         }),
+        new BundleAnalyzerPlugin({analyzerPort: 4200}),
         new HtmlWebpackPlugin({
             template: 'index.html',
             filename: path.resolve(__dirname, 'dist/index.html'),
@@ -171,18 +160,73 @@ if (!isDevelopment) {
         new CopyWebpackPlugin([
             {from: path.resolve(__dirname, 'static'), to: path.resolve(__dirname, 'dist/static')}
         ])
-    ])
+    ]);
+
+    module.exports = environment;
 } else {
-    module.exports.plugins = (module.exports.plugins || []).concat([
+    environment.devtool = 'eval';
+    environment.plugins = (environment.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"development"'
             }
         }),
+        new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             template: 'index.html',
             filename: 'index.html',
             favicon: 'favicon.ico'
         }),
-    ])
+    ]);
+
+    const express = require("express");
+    const app = express();
+
+    let template = null;
+    const compiler = webpack([environment]);
+    const devMiddleware = require("webpack-dev-middleware")(compiler, {logLevel: "silent", noInfo: true});
+    const hotMiddleware = require("webpack-hot-middleware")(compiler, {heartbeat: 5000});
+
+    compiler.plugin("done", () => {
+        template = devMiddleware.fileSystem.readFileSync(path.join(environment.output.path, "index.html"), "utf-8");
+    });
+
+    app.set("env", "production");
+    app.set("x-powered-by", false);
+    app.set("view cache", true);
+    app.set("etag", false);
+
+    app.locals.ENV = 'production';
+    app.locals.ENV_DEVELOPMENT = false;
+
+    app.use(hotMiddleware);
+    app.use(devMiddleware);
+
+    app.use('/static', express.static(path.resolve(__dirname, 'static'), {
+        maxAge: 60 * 60 * 24,
+        immutable: true,
+        redirect: false,
+        index: false,
+        etag: false
+    }));
+
+    app.use((req, res) => {
+        console.info(`- Page request ${req.originalUrl || req.url}`);
+        console.info(`- IP client ` +
+            `${req.headers['x-forwarded-for'] || req.connection.remoteAddress} at ${new Date()}\n`);
+
+        try {
+            res.setHeader("Content-Type", "text/html");
+
+            return res.end(template ? template : "<title>Being compiling, reload immediate...</title>");
+        } catch (e) {
+            console.log(e);
+        }
+
+        return res.end("<title>Internal Server Error<lo/title>");
+    });
+
+    app.listen((process.env.PORT || 8888), () => {
+        console.log("\nPID#" + process.pid + ": Server started, listening at port " + (process.env.PORT || 8888));
+    });
 }

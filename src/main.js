@@ -3,18 +3,13 @@ import VueRouter from 'vue-router';
 import App from './App.vue';
 import Meta from 'vue-meta';
 
-import ArticleMemulaiJS1 from './pages/articles/ArticleMemulaiJS1.vue';
-import ArticleMeminimalisasiPerubahanVarJS from './pages/articles/ArticleMeminimalisasiPerubahanVarJS.vue';
-import ArticleCompileFileCSHARPDenganCMD from './pages/articles/ArticleCompileFileCSHARPDenganCMD.vue';
-import ArticleMacamMethodArrayJS from './pages/articles/ArticleMacamMethodArrayJS.vue';
 import IndexPage from './pages/Index.vue';
-
 import CommonImage from './components/CommonImage.vue';
+import VueGist from './components/VueGist.vue';
 import PortofolioSlider from './components/PortofolioSlider.vue';
 import BaseArticle from './components/BaseArticle.vue';
 import ArticleItem from './components/ArticleItem.vue';
 import AboutMe from './components/AboutMe.vue';
-import VueEmbedGist from 'vue-embed-gist';
 
 Vue.use(VueRouter);
 Vue.use(Meta);
@@ -23,15 +18,19 @@ Vue.component('common-image', CommonImage);
 Vue.component('portofolio-slider', PortofolioSlider);
 Vue.component('base-article', BaseArticle);
 Vue.component('article-item', ArticleItem);
-Vue.component('vue-embed-gist', VueEmbedGist);
+Vue.component('vue-embed-gist', VueGist);
 Vue.component('about-me', AboutMe);
 
+const loadPage = (file, isArticle = true) => () => import((isArticle ? './pages/articles/' : './components/') + file + '.vue')
+    .catch(console.log);
+
 // page-component
-Vue.component('memulai-js-1', ArticleMemulaiJS1);
+Vue.component('memulai-js-1', loadPage('ArticleMemulaiJS1'));
+Vue.component('meminimalisasi-perubahan-var-js', loadPage('ArticleMeminimalisasiPerubahanVarJS'));
+Vue.component('compile-file-csharp-cmd', loadPage('ArticleCompileFileCSHARPDenganCMD'));
+Vue.component('macam-method-array-js', loadPage('ArticleMacamMethodArrayJS'));
+
 Vue.component('index-page', IndexPage);
-Vue.component('macam-method-array-js', ArticleCompileFileCSHARPDenganCMD);
-Vue.component('compile-file-csharp-cmd', ArticleMacamMethodArrayJS);
-Vue.component('meminimalisasi-perubahan-var-js', ArticleMeminimalisasiPerubahanVarJS);
 
 const MemulaiJS1 = {
     template: '<div><memulai-js-1/></div>'
