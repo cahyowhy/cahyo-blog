@@ -105,7 +105,7 @@ const getEnvironment = () => {
         devtool: 'eval',
         plugins: [
             new ExtractTextPlugin({
-                filename: 'static/css/[name].[contenthash].css',
+                filename: 'static/css/[name].css',
                 allChunks: true
             }),
         ]
@@ -144,7 +144,7 @@ if (!isDevelopment) {
             },
             staticDir: path.join(__dirname, 'dist'),
             skipThirdPartyRequests: true,
-            routes: ['/', '/memulai-js-1', '/meminimalisasi-perubahan-var-js', '/macam-method-array-js', '/compile-file-csharp-cmd'],
+            routes: ['/', '/memulai-js-1', '/meminimalisasi-perubahan-var-js', '/macam-method-array-js', '/compile-file-csharp-cmd', '/reduce-js-file-size-webpack-context-replacement-plugin'],
             postProcess(renderedRoute) {
                 return changeElement(renderedRoute.html, renderedRoute.originalRoute).then((val) => {
                     renderedRoute.html = val;
