@@ -29,6 +29,7 @@ Vue.component('memulai-js-1', loadPage('ArticleMemulaiJS1'));
 Vue.component('meminimalisasi-perubahan-var-js', loadPage('ArticleMeminimalisasiPerubahanVarJS'));
 Vue.component('compile-file-csharp-cmd', loadPage('ArticleCompileFileCSHARPDenganCMD'));
 Vue.component('macam-method-array-js', loadPage('ArticleMacamMethodArrayJS'));
+Vue.component('reduce-js-file-size-webpack-context-replacement-plugin', loadPage('ArticleMereduksiUkFileJsDenganContextReplacement'));
 
 Vue.component('index-page', IndexPage);
 
@@ -52,12 +53,17 @@ const BaseIndex = {
     template: '<div><index-page/></div>'
 };
 
+const ReduceJSFileIgnorePlugin = {
+    template: '<div><reduce-js-file-size-webpack-context-replacement-plugin/></div>'
+};
+
 const routes = [
     {path: '/', component: BaseIndex},
     {path: '/memulai-js-1', component: MemulaiJS1},
     {path: '/meminimalisasi-perubahan-var-js', component: MeminimalisasiPerubahanVarJS},
     {path: '/macam-method-array-js', component: MacamMethodArrayJS},
     {path: '/compile-file-csharp-cmd', component: CompileFileCSHARPDenganCMD},
+    {path: '/reduce-js-file-size-webpack-context-replacement-plugin', component: ReduceJSFileIgnorePlugin},
 ];
 
 const router = new VueRouter({

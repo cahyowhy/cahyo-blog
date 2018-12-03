@@ -14,7 +14,7 @@
             <router-view/>
         </div>
         <div class="footer">
-            <div class="inner-foot"><h5>Made by lust by cahyo © 2018.</h5></div>
+            <div class="inner-foot"><h5>Made by ❤️ <br>by cahyo © 2018.</h5></div>
         </div>
     </div>
 </template>

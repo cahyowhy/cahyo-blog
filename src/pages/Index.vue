@@ -46,6 +46,14 @@
             return {
                 articles: [
                     {
+                        title: 'Mengurangi Ukuran Size File Javascript dengan webpack.ContextReplacementPlugin',
+                        date: '3 Desember 2018',
+                        subcontent: `Bekerja dengan menggunakan berbagai macam module npm tentu akan sangat mempermudah kita dalam menyelesaiakan
+                        pekerjaan. Namun tentu saja ada Harga yang harus dibayar... `,
+                        link: '/reduce-js-file-size-webpack-context-replacement-plugin',
+                        isSorotan: false
+                    },
+                    {
                         title: 'Memulai Javascript Part 1',
                         subcontent: `Sebelum memulai untuk belajar
                             framework javascript (misal React, Angular, Ember, Vue dll), Ada baiknya
